@@ -1,54 +1,78 @@
 <template>
   <div id="app">
+      <img alt="Vue logo" src="./assets/logo.png">
       <Header/>
-       <AddTodo/>
+  
+
      
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-      <Todos v-bind:todos="todos" v-on:del-todo="deletetodo" />
+  
+<b-table-simple responsive>
+    <b-thead>
+    <b-tr>
+      <b-th>Username</b-th>
+      <b-th>Title</b-th>
+      <b-th>Summary</b-th>
+    </b-tr>
+    </b-thead>
+    <b-tbody>
+    <b-tr v-for='item in items' v-bind:key="item"> 
+      <b-td>{{ item.t_USERNAME }}</b-td>
+      <b-td>{{ item.t_TITLE }}</b-td>
+      <b-td>{{ item.t_SUMMARY }}</b-td>
+    </b-tr>
+    </b-tbody>
+  </b-table-simple>
   </div>
+
+
+  
 </template>
 
 <script>
-    import Todos from './components/Todos';
+    import Vue from 'vue'
     import Header from './components/Header';
-    import AddTodo from './components/AddTodo';
+    import axios from 'axios';
+    import BootstrapVue from 'bootstrap-vue';
+    import PortalVue from 'portal-vue';
+    Vue.use(BootstrapVue)
+     Vue.use(PortalVue)
 
 export default {
   name: 'app',
-  components: {
-      Todos,
+  components: { 
+      
       Header,
-      AddTodo
+      
+      
   },
   data() {
       return {
-          todos: [
-              {
-              id: 1,
-              title: "Todo One",
-              completed: false
-
-             },
-          {
-             id: 2,
-             title: "Todo Two",
-             completed: false
-      },
-      {
-            id: 3,
-            title: "Todo Three",
-            completed: true
-          }
-      ]
+          items: [
+       // { Title: items.t_TITLE, Summary: items.t_SUMMARY, User: items.t_USER },
+          { age: 21, first_name: 'Larsen', last_name: 'Shaw' },
+          { age: 89, first_name: 'Geneva', last_name: 'Wilson' },
+          { age: 38, first_name: 'Jami', last_name: 'Carney' }
+          ]
       }
       methods: {
-          deleteTodo(id)
-          {
-              this.todos = this.todos.filter(todo => todo.id !== id);
-          }
+     
       }
-        }
+      
+        },
+        created: function()
+      {
+        axios.get('http://student40072.bucomputing.uk/tableQuery.php?tableQuery=all')
+        .then(function (response)
+        {
+        console.log(JSON.stringify(response.data))
+        self.items = response.data
+        })
+        .catch(function (error)
+        {
+          console.log(error)
+
+        });
+      }
 }
 </script>
 
